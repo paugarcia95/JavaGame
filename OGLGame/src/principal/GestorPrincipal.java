@@ -25,7 +25,9 @@ public class GestorPrincipal {
 	}
 
 	public static void main(String[] args) {
-		GestorPrincipal gp = new GestorPrincipal("OGLGame", 640, 360);
+		Constantes.ANCHO_PANTALLA = 640;
+		Constantes.ALTO_PANTALLA = 360;
+		GestorPrincipal gp = new GestorPrincipal("OGLGame", Constantes.ANCHO_PANTALLA, Constantes.ALTO_PANTALLA);
 
 		gp.iniciarJuego();
 		gp.iniciarBuclePrincipal();
@@ -45,7 +47,7 @@ public class GestorPrincipal {
 	}
 
 	private void iniciarBuclePrincipal() {
-		int aps = 0;
+		Constantes.APS = 0;
 		int fps = 0;
 
 		final int NS_POR_SEGUNDO = 1000000000;
@@ -68,7 +70,7 @@ public class GestorPrincipal {
 
 			while (delta >= 1) {
 				actualizar();
-				++aps;
+				++Constantes.APS;
 				--delta;
 			}
 
@@ -78,8 +80,8 @@ public class GestorPrincipal {
 			if (System.nanoTime() - referenciaContador > NS_POR_SEGUNDO) {
 				for (int i = 0; i < 5; ++i)
 					System.out.println();
-				System.out.println("FPS: " + fps + " APS: " + aps);
-				aps = 0;
+				System.out.println("FPS: " + fps + " APS: " + Constantes.APS);
+				Constantes.APS = 0;
 				fps = 0;
 				referenciaContador = System.nanoTime();
 			}
