@@ -7,10 +7,7 @@ import principal.maquinaEstado.EstadoJuego;
 
 public class GestorJuego implements EstadoJuego {
 	
-	private GestorMapa gestorMapa;
 	Mapa mapa = new Mapa("/texto/prueba");
-
-	// String texto = CargadorRecursos.leerArchivoTexto("/texto/prueba");
 
 	@Override
 	public void actualizar() {

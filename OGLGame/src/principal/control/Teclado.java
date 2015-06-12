@@ -4,16 +4,16 @@ import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 
 public final class Teclado implements KeyListener {
-	private final static int NUMERO_TECLAS = 256;
-	private final boolean[] teclas = new boolean[NUMERO_TECLAS];
+	private final int numeroTeclas = 256;
+	private final boolean[] teclas = new boolean[numeroTeclas];
 
-	public boolean arriba;
-	public boolean abajo;
-	public boolean izquierda;
-	public boolean derecha;
+	private boolean arriba;
+	private boolean abajo;
+	private boolean izquierda;
+	private boolean derecha;
 
-	public boolean correr;
-	public boolean salir;
+	private boolean correr;
+	private boolean salir;
 
 	public void actualizar() {
 		arriba = teclas[KeyEvent.VK_W];
@@ -39,6 +39,30 @@ public final class Teclado implements KeyListener {
 	@Override
 	public void keyTyped(KeyEvent e) { // Pulsar y soltar la tecla
 
+	}
+
+	public boolean pulsadoArriba() {
+		return arriba;
+	}
+
+	public boolean pulsadoAbajo() {
+		return abajo;
+	}
+
+	public boolean pulsadoIzquierda() {
+		return izquierda;
+	}
+
+	public boolean pulsadoDerecha() {
+		return derecha;
+	}
+
+	public boolean pulsadoCorrer() {
+		return correr;
+	}
+
+	public boolean pulsadoSalir() {
+		return salir;
 	}
 
 }

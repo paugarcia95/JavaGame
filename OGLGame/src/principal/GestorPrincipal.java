@@ -1,5 +1,6 @@
 package principal;
 
+import principal.control.GestorControles;
 import principal.graficos.SuperficieDibujo;
 import principal.graficos.Ventana;
 import principal.maquinaEstado.GestorEstados;
@@ -86,7 +87,7 @@ public class GestorPrincipal {
 	}
 
 	private void actualizar() {
-		sd.getTeclado().actualizar();
+		GestorControles.teclado.actualizar();
 		ge.actualizar();
 	}
 

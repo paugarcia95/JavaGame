@@ -7,8 +7,8 @@ import java.awt.Graphics;
 import java.awt.Toolkit;
 import java.awt.image.BufferStrategy;
 
+import principal.control.GestorControles;
 import principal.control.Raton;
-import principal.control.Teclado;
 import principal.maquinaEstado.GestorEstados;
 
 public class SuperficieDibujo extends Canvas {
@@ -19,7 +19,6 @@ public class SuperficieDibujo extends Canvas {
 	private int ancho;
 	private int alto;
 
-	private Teclado teclado;
 	private Raton raton;
 
 	// Construcor
@@ -27,14 +26,15 @@ public class SuperficieDibujo extends Canvas {
 		this.ancho = ancho;
 		this.alto = alto;
 
-		teclado = new Teclado();
 		raton = new Raton();
 
 		setIgnoreRepaint(true);
+
+		// Canvia el cursor (si vull treure, comenta aquesta instrucció)
 		setCursor(raton.getCursor());
 
 		setPreferredSize(new Dimension(ancho, alto));
-		addKeyListener(teclado);
+		addKeyListener(GestorControles.teclado);
 		setFocusable(true);
 		requestFocus();
 	}
@@ -59,10 +59,6 @@ public class SuperficieDibujo extends Canvas {
 
 		g.dispose(); // Ja puc esborrar el que hi ha a g
 		buffer.show();
-	}
-
-	public Teclado getTeclado() {
-		return teclado;
 	}
 
 	public int getAlto() {

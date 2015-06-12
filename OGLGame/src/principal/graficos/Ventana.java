@@ -27,7 +27,7 @@ public class Ventana extends JFrame {
 		setTitle(titulo);
 		setIconImage(icono.getImage());
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setResizable(false);
+		// setResizable(false);
 		setLayout(new BorderLayout());
 		add(sd, BorderLayout.CENTER);
 		pack();
