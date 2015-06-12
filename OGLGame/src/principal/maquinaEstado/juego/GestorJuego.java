@@ -3,14 +3,15 @@ package principal.maquinaEstado.juego;
 import java.awt.Color;
 import java.awt.Graphics;
 
+import principal.Constantes;
 import principal.entes.Jugador;
 import principal.mapas.Mapa;
 import principal.maquinaEstado.EstadoJuego;
 
 public class GestorJuego implements EstadoJuego {
 	
-	Mapa mapa = new Mapa("/texto/prueba");
-	Jugador jugador = new Jugador(0, 0);
+	Mapa mapa = new Mapa(Constantes.RUTA_MAPA);
+	Jugador jugador = new Jugador(0, 0, mapa);
 
 	@Override
 	public void actualizar() {

@@ -11,12 +11,12 @@ public class Constantes {
 	public static int ALTO_VENTANA = 360;
 
 	public static int CENTRO_VENTANA_X = ANCHO_VENTANA / 2;
-	public static int CENTRO_VENTAnA_Y = ALTO_VENTANA / 2;
+	public static int CENTRO_VENTANA_Y = ALTO_VENTANA / 2;
 
 	public static int APS = 0;
 
-	public static String RUTA_MAPA = "";
+	public static String RUTA_MAPA = "/texto/prueba";
 	public static String RUTA_ICONO_RATON = "/imagenes/iconos/iconoCursor.png";
-	public static String RUTA_ICONO_VENTANA = "";
+	public static String RUTA_ICONO_VENTANA = "/imagenes/iconos/iconoVentana.png";
 	public static String RUTA_PERSONAJE = "/imagenes/hojasPersonajes/jugador1.png";
 }

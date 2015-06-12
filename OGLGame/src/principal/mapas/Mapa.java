@@ -1,6 +1,7 @@
 package principal.mapas;
 
 import java.awt.Graphics;
+import java.awt.Rectangle;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 
@@ -19,6 +20,9 @@ public class Mapa {
 
 	private final boolean[] colisiones;
 	private final int[] sprites;
+
+	private final int MARGEN_X = Constantes.ANCHO_VENTANA / 2 - Constantes.ANCHO_PERSONAJE / 2;
+	private final int MARGEN_Y = Constantes.ALTO_VENTANA / 2 - Constantes.ALTO_PERSONAJE / 2;
 
 	public Mapa(final String ruta) {
 		final String contenido = CargadorRecursos.leerArchivoTexto(ruta);
@@ -110,18 +114,27 @@ public class Mapa {
 		return vectorSprites;
 	}
 
-	public void dibujar(Graphics g, int posicionX, int posicionY) {
+	public void dibujar(Graphics g, final int posicionX, final int posicionY) {
 		// VIGILAR!! AQui tracta els sprites iguals
-		int anchoSprite = Constantes.LADO_SPRITE;
-		int altoSprite = anchoSprite;
 
 		for (int y = 0; y < this.alto; ++y) {
 			for (int x = 0; x < this.ancho; ++x) {
 				BufferedImage img = paleta[sprites[x + y * this.ancho]].getImagen();
-				g.drawImage(img, x * anchoSprite - posicionX, y * altoSprite - posicionY, null);
+
+				int puntoX = x * Constantes.LADO_SPRITE - posicionX + MARGEN_X;
+				int puntoY = y * Constantes.LADO_SPRITE - posicionY + MARGEN_Y;
+
+				g.drawImage(img, puntoX, puntoY, null);
 			}
 		}
 	}
 
+	public Rectangle getBordes(final int posicionX, final int posicionY, final int anchoJugador, final int altoJugador) {
+		int x = MARGEN_X - posicionX + anchoJugador;
+		int y = MARGEN_Y - posicionY + altoJugador;
+		int ancho = this.ancho * Constantes.LADO_SPRITE - anchoJugador * 2;
+		int alto = this.alto * Constantes.LADO_SPRITE - altoJugador * 2;
 
+		return new Rectangle(x, y, ancho, alto);
+	}
 }

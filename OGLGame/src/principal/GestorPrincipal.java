@@ -4,7 +4,7 @@ import principal.graficos.SuperficieDibujo;
 import principal.graficos.Ventana;
 import principal.maquinaEstado.GestorEstados;
 /*
- * Capitol 61
+ * Capitol 67
  */
 public class GestorPrincipal {
 
@@ -34,7 +34,6 @@ public class GestorPrincipal {
 	private void iniciarJuego() {
 		enFuncionamiento = true;
 		inicializar();
-
 	}
 
 	private void inicializar() {

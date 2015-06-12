@@ -2,10 +2,12 @@ package principal.entes;
 
 import java.awt.Color;
 import java.awt.Graphics;
+import java.awt.Rectangle;
 import java.awt.image.BufferedImage;
 
 import principal.Constantes;
 import principal.control.GestorControles;
+import principal.mapas.Mapa;
 import principal.sprites.HojaSprites;
 
 public class Jugador {
@@ -28,7 +30,21 @@ public class Jugador {
 	private HojaSprites hs;
 	private BufferedImage imagenActual;
 
-	public Jugador(double x, double y) {
+	private Mapa mapa;
+	
+	private final int ANCHO_COLISION = 18;
+	private final int ALTO_COLISION = 15;
+
+	private final Rectangle LIMITE_ARRIBA = new Rectangle(Constantes.CENTRO_VENTANA_X - ANCHO_COLISION / 2,
+			Constantes.CENTRO_VENTANA_Y + ALTO_COLISION, ANCHO_COLISION, 1);
+	private final Rectangle LIMITE_ABAJO = new Rectangle(Constantes.CENTRO_VENTANA_X - ANCHO_COLISION / 2,
+			Constantes.CENTRO_VENTANA_Y + ALTO_COLISION * 2, ANCHO_COLISION, 1);
+	private final Rectangle LIMITE_IZQUIERDA = new Rectangle(Constantes.CENTRO_VENTANA_X - ANCHO_COLISION / 2,
+			Constantes.CENTRO_VENTANA_Y + ALTO_COLISION, 1, ALTO_COLISION);
+	private final Rectangle LIMITE_DERECHA = new Rectangle(Constantes.CENTRO_VENTANA_X + ANCHO_COLISION / 2,
+			Constantes.CENTRO_VENTANA_Y + ALTO_COLISION, 1, ALTO_COLISION);
+
+	public Jugador(double x, double y, Mapa mapa) {
 		posicionX = x;
 		posicionY = y;
 
@@ -37,6 +53,7 @@ public class Jugador {
 		estado = 0;
 
 		enMovimiento = false;
+		this.mapa = mapa;
 		
 		hs = new HojaSprites(Constantes.RUTA_PERSONAJE, Constantes.ANCHO_PERSONAJE,
 				Constantes.ALTO_PERSONAJE, false);
@@ -122,9 +139,28 @@ public class Jugador {
 
 		cambiarDireccion(velocidadX, velocidadY);
 
-		posicionX += velocidadX * velocidad;
-		posicionY += velocidadY * velocidad;
+		if (!fueraMapa(velocidadX, velocidadY)) {
+			posicionX += velocidadX * velocidad;
+			posicionY += velocidadY * velocidad;
+		}
+	}
 
+	private boolean fueraMapa(final int velocidadX, final int velocidadY) {
+		int posicionFuturaX = (int) posicionX + velocidadX * velocidad;
+		int posicionFuturaY = (int) posicionY + velocidadY * velocidad;
+
+		final Rectangle bordesMapa = mapa.getBordes(posicionFuturaX, posicionFuturaY, ANCHO_COLISION, ALTO_COLISION);
+		
+		final boolean fuera;
+
+		if (LIMITE_ARRIBA.intersects(bordesMapa) || LIMITE_ABAJO.intersects(bordesMapa)
+				|| LIMITE_IZQUIERDA.intersects(bordesMapa) || LIMITE_DERECHA.intersects(bordesMapa)) {
+			fuera = false;
+		} else {
+			fuera = true;
+		}
+		
+		return fuera;
 	}
 
 	private void cambiarDireccion(int velocidadX, int velocidadY) {
@@ -177,7 +213,10 @@ public class Jugador {
 		g.drawImage(imagenActual, centroX, centroY, null);
 
 		g.setColor(Color.MAGENTA);
-		g.drawRect(centroX, centroY, Constantes.ANCHO_PERSONAJE, Constantes.ALTO_PERSONAJE);
+		g.drawRect(LIMITE_ARRIBA.x, LIMITE_ARRIBA.y, LIMITE_ARRIBA.width, LIMITE_ARRIBA.height);
+		g.drawRect(LIMITE_ABAJO.x, LIMITE_ABAJO.y, LIMITE_ABAJO.width, LIMITE_ABAJO.height);
+		g.drawRect(LIMITE_IZQUIERDA.x, LIMITE_IZQUIERDA.y, LIMITE_IZQUIERDA.width, LIMITE_IZQUIERDA.height);
+		g.drawRect(LIMITE_DERECHA.x, LIMITE_DERECHA.y, LIMITE_DERECHA.width, LIMITE_DERECHA.height);
 	}
 
 	public void setPosicionX(double posicionX) {
