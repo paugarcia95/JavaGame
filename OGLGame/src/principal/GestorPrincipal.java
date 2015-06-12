@@ -1,6 +1,5 @@
 package principal;
 
-import principal.control.GestorControles;
 import principal.graficos.SuperficieDibujo;
 import principal.graficos.Ventana;
 import principal.maquinaEstado.GestorEstados;
@@ -25,9 +24,7 @@ public class GestorPrincipal {
 	}
 
 	public static void main(String[] args) {
-		Constantes.ANCHO_PANTALLA = 640;
-		Constantes.ALTO_PANTALLA = 360;
-		GestorPrincipal gp = new GestorPrincipal("OGLGame", Constantes.ANCHO_PANTALLA, Constantes.ALTO_PANTALLA);
+		GestorPrincipal gp = new GestorPrincipal("OGLGame", Constantes.ANCHO_VENTANA, Constantes.ALTO_VENTANA);
 
 		gp.iniciarJuego();
 		gp.iniciarBuclePrincipal();
@@ -89,7 +86,6 @@ public class GestorPrincipal {
 	}
 
 	private void actualizar() {
-		GestorControles.teclado.actualizar();
 		ge.actualizar();
 	}
 
