@@ -17,6 +17,9 @@ public class GestorPrincipal {
 	Ventana ventana;
 	GestorEstados ge;
 
+	private static int fps = 0;
+	private static int aps = 0;
+
 	private GestorPrincipal(final String titulo, final int ancho, final int alto) {
 		this.titulo = titulo;
 		this.ancho = ancho;
@@ -24,7 +27,8 @@ public class GestorPrincipal {
 	}
 
 	public static void main(String[] args) {
-		GestorPrincipal gp = new GestorPrincipal("OGLGame", Constantes.ANCHO_VENTANA, Constantes.ALTO_VENTANA);
+		GestorPrincipal gp = new GestorPrincipal("OGLGame", Constantes.ANCHO_PANTALLA_COMPLETA,
+				Constantes.ALTO_PANTALLA_COMPLETA);
 
 		gp.iniciarJuego();
 		gp.iniciarBuclePrincipal();
@@ -43,8 +47,8 @@ public class GestorPrincipal {
 	}
 
 	private void iniciarBuclePrincipal() {
-		Constantes.APS = 0;
-		int fps = 0;
+		int actualizacionesAcomuladas = 0;
+		int framesAcomulados = 0;
 
 		final int NS_POR_SEGUNDO = 1000000000;
 		final int APS_OBJETIVO = 60; // Actualizaciones por segundo
@@ -66,19 +70,19 @@ public class GestorPrincipal {
 
 			while (delta >= 1) {
 				actualizar();
-				++Constantes.APS;
+				++actualizacionesAcomuladas;
 				--delta;
 			}
 
 			dibujar();
-			++fps;
+			++framesAcomulados;
 
 			if (System.nanoTime() - referenciaContador > NS_POR_SEGUNDO) {
-				for (int i = 0; i < 5; ++i)
-					System.out.println();
-				System.out.println("FPS: " + fps + " APS: " + Constantes.APS);
-				Constantes.APS = 0;
-				fps = 0;
+				aps = actualizacionesAcomuladas;
+				fps = framesAcomulados;
+
+				actualizacionesAcomuladas = 0;
+				framesAcomulados = 0;
 				referenciaContador = System.nanoTime();
 			}
 		}
@@ -86,10 +90,19 @@ public class GestorPrincipal {
 
 	private void actualizar() {
 		ge.actualizar();
+		sd.actualizar();
 	}
 
 	private void dibujar() {
 		sd.dibujar(ge);
+	}
+
+	public static int getFps() {
+		return fps;
+	}
+
+	public static int getAps() {
+		return aps;
 	}
 
 }

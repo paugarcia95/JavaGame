@@ -7,6 +7,7 @@ import java.awt.image.BufferedImage;
 
 import principal.Constantes;
 import principal.control.GestorControles;
+import principal.herramientas.DrawerClass;
 import principal.mapas.Mapa;
 import principal.sprites.HojaSprites;
 
@@ -44,9 +45,12 @@ public class Jugador {
 	private final Rectangle LIMITE_DERECHA = new Rectangle(Constantes.CENTRO_VENTANA_X + ANCHO_COLISION / 2,
 			Constantes.CENTRO_VENTANA_Y + ALTO_COLISION, 1, ALTO_COLISION);
 
-	public Jugador(double x, double y, Mapa mapa) {
-		posicionX = x;
-		posicionY = y;
+	public int resistencia = 600;
+	public int recuperacion = 0;
+
+	public Jugador(Mapa mapa) {
+		posicionX = mapa.getPosicionInicial().getX();
+		posicionY = mapa.getPosicionInicial().getY();
 
 		direccion = 0;
 		animacion = 0;
@@ -61,6 +65,7 @@ public class Jugador {
 	}
 
 	public void actualizar() {
+		gestionarResistencia();
 		cambiarAnimacionEstado();
 		enMovimiento = false;
 		determinarDireccion();
@@ -68,16 +73,23 @@ public class Jugador {
 	}
 
 	private void cambiarAnimacionEstado() {
-		if (animacion < 30) {
+		// Múltiples de 4 (com més petit, més ràpid: mínim 4)
+		final int velocitatAnimacio = 40;
+
+		if (animacion < velocitatAnimacio) {
 			++animacion;
 		} else {
 			animacion = 0;
 		}
 
-		if (animacion < 15) {
+		if (animacion < velocitatAnimacio / 4) {
 			estado = 1;
-		} else {
+		} else if (animacion < velocitatAnimacio / 2) {
+			estado = 0;
+		} else if (animacion < velocitatAnimacio * 3 / 4) {
 			estado = 2;
+		} else {
+			estado = 0;
 		}
 
 	}
@@ -140,9 +152,118 @@ public class Jugador {
 		cambiarDireccion(velocidadX, velocidadY);
 
 		if (!fueraMapa(velocidadX, velocidadY)) {
-			posicionX += velocidadX * velocidad;
-			posicionY += velocidadY * velocidad;
+			if (velocidadX == -1 && !enColisionIzquierda(velocidadX)) {
+				posicionX += velocidadX * velocidad;
+				restarResistencia();
+				return;
+			}
+			if (velocidadX == 1 && !enColisionDerecha(velocidadX)) {
+				posicionX += velocidadX * velocidad;
+				restarResistencia();
+				return;
+			}
+			if (velocidadY == -1 && !enColisionArriba(velocidadY)) {
+				posicionY += velocidadY * velocidad;
+				restarResistencia();
+				return;
+			}
+			if (velocidadY == 1 && !enColisionAbajo(velocidadY)) {
+				posicionY += velocidadY * velocidad;
+				restarResistencia();
+				return;
+			}
 		}
+	}
+
+	private void gestionarResistencia() {
+		if (recuperacion < Constantes.MAX_RECUPERACION) {
+			++recuperacion;
+		}
+		if (recuperacion == 100 && resistencia < 600) {
+			++resistencia;
+		}
+
+		if (GestorControles.teclado.corriendo && resistencia > 0) {
+			velocidad = 2;
+		} else {
+			velocidad = 1;
+		}
+	}
+
+	private void restarResistencia() {
+		if (GestorControles.teclado.corriendo) {
+			if (resistencia > 0) {
+				resistencia -= 2;
+			} else
+				resistencia = 0;
+			if (recuperacion > 0) {
+				recuperacion -= 2;
+			}
+		}
+	}
+
+	private boolean enColisionArriba(int velocidadY) {
+		for (int r = 0; r < mapa.areasColision.size(); ++r) {
+			final Rectangle area = mapa.areasColision.get(r);
+
+			int origenX = area.x;
+			int origenY = area.y + velocidadY * velocidad + 3 * velocidad;
+
+			final Rectangle areaFutura = new Rectangle(origenX, origenY, Constantes.LADO_SPRITE, Constantes.LADO_SPRITE);
+
+			if (LIMITE_ARRIBA.intersects(areaFutura)) {
+				return true;
+			}
+		}
+		return false;
+	}
+
+	private boolean enColisionAbajo(int velocidadY) {
+		for (int r = 0; r < mapa.areasColision.size(); ++r) {
+			final Rectangle area = mapa.areasColision.get(r);
+
+			int origenX = area.x;
+			int origenY = area.y + velocidadY * velocidad - 3 * velocidad;
+
+			final Rectangle areaFutura = new Rectangle(origenX, origenY, Constantes.LADO_SPRITE, Constantes.LADO_SPRITE);
+
+			if (LIMITE_ABAJO.intersects(areaFutura)) {
+				return true;
+			}
+		}
+		return false;
+	}
+
+	private boolean enColisionIzquierda(int velocidadX) {
+		for (int r = 0; r < mapa.areasColision.size(); ++r) {
+			final Rectangle area = mapa.areasColision.get(r);
+
+			int origenX = area.x + velocidadX * velocidad + 3 * velocidad;
+			int origenY = area.y;
+
+			final Rectangle areaFutura = new Rectangle(origenX, origenY, Constantes.LADO_SPRITE, Constantes.LADO_SPRITE);
+
+			if (LIMITE_IZQUIERDA.intersects(areaFutura)) {
+				return true;
+			}
+		}
+		return false;
+	}
+
+	private boolean enColisionDerecha(int velocidadX) {
+		for (int r = 0; r < mapa.areasColision.size(); ++r) {
+			final Rectangle area = mapa.areasColision.get(r);
+
+			int origenX = area.x + velocidadX * velocidad - 3 * velocidad;
+			int origenY = area.y;
+
+			final Rectangle areaFutura = new Rectangle(origenX, origenY, Constantes.LADO_SPRITE, Constantes.LADO_SPRITE);
+
+			if (LIMITE_DERECHA.intersects(areaFutura)) {
+				return true;
+			}
+		}
+		return false;
 	}
 
 	private boolean fueraMapa(final int velocidadX, final int velocidadY) {
@@ -207,16 +328,18 @@ public class Jugador {
 	}
 
 	public void dibujar(Graphics g) {
-		final int centroX = Constantes.ANCHO_VENTANA / 2 - Constantes.LADO_SPRITE / 2;
-		final int centroY = Constantes.ALTO_VENTANA / 2 - Constantes.LADO_SPRITE / 2;
+		final int centroX = Constantes.ANCHO_JUEGO / 2 - Constantes.LADO_SPRITE / 2;
+		final int centroY = Constantes.ALTO_JUEGO / 2 - Constantes.LADO_SPRITE / 2;
 		
-		g.drawImage(imagenActual, centroX, centroY, null);
+		DrawerClass.dibujarImagen(g, imagenActual, centroX, centroY);
 
-		g.setColor(Color.MAGENTA);
-		g.drawRect(LIMITE_ARRIBA.x, LIMITE_ARRIBA.y, LIMITE_ARRIBA.width, LIMITE_ARRIBA.height);
-		g.drawRect(LIMITE_ABAJO.x, LIMITE_ABAJO.y, LIMITE_ABAJO.width, LIMITE_ABAJO.height);
-		g.drawRect(LIMITE_IZQUIERDA.x, LIMITE_IZQUIERDA.y, LIMITE_IZQUIERDA.width, LIMITE_IZQUIERDA.height);
-		g.drawRect(LIMITE_DERECHA.x, LIMITE_DERECHA.y, LIMITE_DERECHA.width, LIMITE_DERECHA.height);
+		if (Constantes.debug2)
+			dibuixaRectanglesColisio(g);
+	}
+
+	private void dibuixaRectanglesColisio(Graphics g) {
+		DrawerClass.dibujarRectanguloContorno(g, new Rectangle(LIMITE_ARRIBA.x, LIMITE_ARRIBA.y,
+				LIMITE_ARRIBA.width + 1, LIMITE_DERECHA.height + 1), Color.MAGENTA);
 	}
 
 	public void setPosicionX(double posicionX) {
@@ -241,5 +364,21 @@ public class Jugador {
 
 	public double getVelocitat() {
 		return velocidad;
+	}
+
+	public Rectangle getLIMITE_ARRIBA() {
+		return LIMITE_ARRIBA;
+	}
+
+	public Rectangle getLIMITE_ABAJO() {
+		return LIMITE_ABAJO;
+	}
+
+	public Rectangle getLIMITE_IZQUIERDA() {
+		return LIMITE_IZQUIERDA;
+	}
+
+	public Rectangle getLIMITE_DERECHA() {
+		return LIMITE_DERECHA;
 	}
 }

@@ -1,12 +1,15 @@
 package principal.mapas;
 
+import java.awt.Color;
 import java.awt.Graphics;
+import java.awt.Point;
 import java.awt.Rectangle;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 
 import principal.Constantes;
 import principal.herramientas.CargadorRecursos;
+import principal.herramientas.DrawerClass;
 import principal.sprites.HojaSprites;
 import principal.sprites.Sprite;
 
@@ -16,13 +19,20 @@ public class Mapa {
 	private final int ancho;
 	private final int alto;
 
+	private final Point posicionInicial;
+	private final Point puntoSalida;
+	private String siguienteMapa;
+	private Rectangle zonaSalida;
+
 	private final Sprite[] paleta;
 
 	private final boolean[] colisiones;
+	public ArrayList<Rectangle> areasColision = new ArrayList<Rectangle>();
+
 	private final int[] sprites;
 
-	private final int MARGEN_X = Constantes.ANCHO_VENTANA / 2 - Constantes.ANCHO_PERSONAJE / 2;
-	private final int MARGEN_Y = Constantes.ALTO_VENTANA / 2 - Constantes.ALTO_PERSONAJE / 2;
+	private final int MARGEN_X = Constantes.ANCHO_JUEGO / 2 - Constantes.ANCHO_PERSONAJE / 2;
+	private final int MARGEN_Y = Constantes.ALTO_JUEGO / 2 - Constantes.ALTO_PERSONAJE / 2;
 
 	public Mapa(final String ruta) {
 		final String contenido = CargadorRecursos.leerArchivoTexto(ruta);
@@ -50,6 +60,22 @@ public class Mapa {
 		String[] cadenasSprites = spritesEnteros.split(" ");
 		sprites = extraerSprites(cadenasSprites);
 
+		String posicion = partes[6];
+		String[] posiciones = posicion.split("-");
+
+		posicionInicial = new Point();
+		posicionInicial.x = Integer.parseInt(posiciones[0]) * Constantes.LADO_SPRITE;
+		posicionInicial.y = Integer.parseInt(posiciones[1]) * Constantes.LADO_SPRITE;
+
+		String salida = partes[7];
+		String[] datosSalida = salida.split("-");
+
+		puntoSalida = new Point();
+		puntoSalida.x = Integer.parseInt(datosSalida[0]);
+		puntoSalida.y = Integer.parseInt(datosSalida[1]);
+		siguienteMapa = datosSalida[2];
+
+		zonaSalida = new Rectangle();
 	}
 	
 	private Sprite[] assignarSprites(final String[] partesPaleta, final String[] hojasSeparadas) {
@@ -114,9 +140,37 @@ public class Mapa {
 		return vectorSprites;
 	}
 
-	public void dibujar(Graphics g, final int posicionX, final int posicionY) {
-		// VIGILAR!! AQui tracta els sprites iguals
+	public void actualizar(final int posicionX, final int posicionY) {
+		actualizarAreasColision(posicionX, posicionY);
+		actualizarZonaSalida(posicionX, posicionY);
+	}
 
+	private void actualizarAreasColision(final int posicionX, final int posicionY) {
+		if (!areasColision.isEmpty()) {
+			areasColision.clear();
+		}
+		
+		for (int y = 0; y < this.alto; ++y) {
+			for (int x = 0; x < this.ancho; ++x) {
+				int puntoX = x * Constantes.LADO_SPRITE - posicionX + MARGEN_X;
+				int puntoY = y * Constantes.LADO_SPRITE - posicionY + MARGEN_Y;
+				
+				if (colisiones[x + y * this.ancho]) {
+					final Rectangle r = new Rectangle(puntoX, puntoY, Constantes.LADO_SPRITE, Constantes.LADO_SPRITE);
+					areasColision.add(r);
+				}
+			}
+		}
+	}
+
+	private void actualizarZonaSalida(final int posicionX, final int posicionY) {
+		int puntoX = puntoSalida.x * Constantes.LADO_SPRITE - posicionX + MARGEN_X;
+		int puntoY = puntoSalida.y * Constantes.LADO_SPRITE - posicionY + MARGEN_Y;
+
+		zonaSalida = new Rectangle(puntoX, puntoY, Constantes.LADO_SPRITE, Constantes.LADO_SPRITE);
+	}
+
+	public void dibujar(Graphics g, final int posicionX, final int posicionY) {
 		for (int y = 0; y < this.alto; ++y) {
 			for (int x = 0; x < this.ancho; ++x) {
 				BufferedImage img = paleta[sprites[x + y * this.ancho]].getImagen();
@@ -124,9 +178,27 @@ public class Mapa {
 				int puntoX = x * Constantes.LADO_SPRITE - posicionX + MARGEN_X;
 				int puntoY = y * Constantes.LADO_SPRITE - posicionY + MARGEN_Y;
 
-				g.drawImage(img, puntoX, puntoY, null);
+				DrawerClass.dibujarImagen(g, img, puntoX, puntoY);
 			}
 		}
+		if (Constantes.debug2)
+			dibuixaRectanglesColisio(g);
+		if (Constantes.debug1 || Constantes.debug2) {
+			dibuixarRectangleSortida(g);
+		}
+	}
+
+	private void dibuixaRectanglesColisio(Graphics g) {
+		g.setColor(Color.GREEN);
+		for (int i = 0; i < areasColision.size(); ++i) {
+			Rectangle aux = areasColision.get(i);
+			DrawerClass.dibujarRectanguloContorno(g, aux.x, aux.y, aux.width, aux.height);
+		}
+	}
+
+	private void dibuixarRectangleSortida(Graphics g) {
+		g.setColor(Color.MAGENTA);
+		DrawerClass.dibujarRectanguloRelleno(g, zonaSalida.x, zonaSalida.y, zonaSalida.width, zonaSalida.height);
 	}
 
 	public Rectangle getBordes(final int posicionX, final int posicionY, final int anchoJugador, final int altoJugador) {
@@ -136,5 +208,21 @@ public class Mapa {
 		int alto = this.alto * Constantes.LADO_SPRITE - altoJugador * 2;
 
 		return new Rectangle(x, y, ancho, alto);
+	}
+
+	public Point getPosicionInicial() {
+		return posicionInicial;
+	}
+
+	public Point getPuntoSalida() {
+		return puntoSalida;
+	}
+
+	public String getSiguienteMapa() {
+		return siguienteMapa;
+	}
+
+	public Rectangle getZonaSalida() {
+		return zonaSalida;
 	}
 }

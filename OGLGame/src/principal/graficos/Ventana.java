@@ -31,6 +31,7 @@ public class Ventana extends JFrame {
 		// setResizable(false);
 		setLayout(new BorderLayout());
 		add(sd, BorderLayout.CENTER);
+		setUndecorated(true); // Fa que la finestra no tingui marges
 		pack();
 		setLocationRelativeTo(null);
 		setVisible(true);
