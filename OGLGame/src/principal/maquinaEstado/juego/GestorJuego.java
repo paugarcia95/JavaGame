@@ -2,13 +2,17 @@ package principal.maquinaEstado.juego;
 
 import java.awt.Color;
 import java.awt.Graphics;
+import java.awt.Point;
+import java.awt.Rectangle;
+import java.util.ArrayList;
 
 import principal.Constantes;
 import principal.GestorPrincipal;
+import principal.VariablesGlobales;
 import principal.entes.Jugador;
 import principal.graficos.SuperficieDibujo;
 import principal.herramientas.DrawerClass;
-import principal.interfaz_usuario.MenuInferior;
+import principal.interfazUsuario.MenuInferior;
 import principal.mapas.Mapa;
 import principal.maquinaEstado.EstadoJuego;
 
@@ -26,37 +30,46 @@ public class GestorJuego implements EstadoJuego {
 		menuInferior = new MenuInferior(jugador);
 	}
 
-	private void recargarJuego() {
-		final String ruta = "/mapas/" + mapa.getSiguienteMapa();
+	private void recargarJuego(final int i) {
+		final String ruta = "/mapas/" + mapa.getSiguienteMapa(i);
 
-		iniciarMapa(ruta);
-		iniciarJugador();
+		iniciarMapa(ruta, mapa.getPuntoLlegada(i));
+		jugador.mover(mapa);
 	}
 
 	private void iniciarMapa(final String ruta) {
 		mapa = new Mapa(ruta);
 	}
 
+	private void iniciarMapa(final String ruta, final Point posicionInicial) {
+		mapa = new Mapa(ruta);
+		mapa.setPosicionInicial(posicionInicial);
+	}
+
 	private void iniciarJugador() {
 		jugador = new Jugador(mapa);
 	}
 
+
 	@Override
 	public void actualizar() {
-		if (jugador.getLIMITE_ARRIBA().intersects(mapa.getZonaSalida())) {
-			recargarJuego();
+		ArrayList<Rectangle> zonasSalida = mapa.getZonaSalida();
+		for (int i = 0; i < zonasSalida.size(); ++i) {
+			if (jugador.getLIMITE_ARRIBA().intersects(zonasSalida.get(i))) {
+				recargarJuego(i);
+			}
 		}
 
 		jugador.actualizar();
 		mapa.actualizar((int) jugador.getPosicionX(), (int) jugador.getPosicionY());
+		menuInferior.actualizar();
 	}
 
 	@Override
 	public void dibujar(final Graphics g) {
 		mapa.dibujar(g, (int) jugador.getPosicionX(), (int) jugador.getPosicionY());
 		jugador.dibujar(g);
-
-		menuInferior.dibujar(g, jugador);
+		menuInferior.dibujar(g);
 
 		mostrarInformacio(g);
 	}
@@ -67,7 +80,7 @@ public class GestorJuego implements EstadoJuego {
 		DrawerClass.dibujarString(g, "Y = " + (int) (jugador.getPosicionY() / Constantes.LADO_SPRITE + 1), 20, 30);
 
 		// Posicio Ratoli
-		if (Constantes.debug1) {
+		if (VariablesGlobales.debug1) {
 			DrawerClass.dibujarString(g, " | RX = " + SuperficieDibujo.raton.getPosicion().getX(), 60, 20);
 			DrawerClass.dibujarString(g, " | RY = " + SuperficieDibujo.raton.getPosicion().getY(), 60, 30);
 
@@ -78,9 +91,17 @@ public class GestorJuego implements EstadoJuego {
 		// FPS & APS
 		DrawerClass.dibujarString(g, "FPS: " + GestorPrincipal.getFps(), 20, 45, Color.GRAY);
 		DrawerClass.dibujarString(g, "APS: " + GestorPrincipal.getAps(), 20, 55);
+	}
 
-		// Barra resistencia
-		MenuInferior.dibujarBarraResistencia(g, jugador.resistencia, jugador.recuperacion);
+	@Override
+	public void limpiarPantalla(Graphics g) {
+		DrawerClass.dibujarRectanguloRelleno(g, 0, 0, Constantes.ANCHO_PANTALLA_COMPLETA,
+				(int) (Constantes.ALTO_PANTALLA_COMPLETA - MenuInferior.altoMenu * Constantes.FACTOR_ESCALADO_Y),
+				Color.black);
+	}
+
+	@Override
+	public void reanudar() {
 	}
 
 }

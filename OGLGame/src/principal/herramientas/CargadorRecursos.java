@@ -92,7 +92,7 @@ public class CargadorRecursos {
 		return contenido;
 	}
 
-	public static Font cargarFuente(final String ruta) {
+	public static Font cargarFuente(final String ruta, final float size) {
 		Font fuente = null;
 
 		InputStream entradaBytes = ClassLoader.class.getResourceAsStream(ruta);
@@ -103,7 +103,7 @@ public class CargadorRecursos {
 			e.printStackTrace();
 		}
 
-		fuente = fuente.deriveFont(12f);
+		fuente = fuente.deriveFont(size);
 
 		return fuente;
 	}

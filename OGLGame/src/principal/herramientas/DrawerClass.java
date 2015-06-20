@@ -90,6 +90,56 @@ public class DrawerClass {
 		g.drawRect(r.x, r.y, r.width, r.height);
 	}
 
+	public static void dibujarCircumferenciaContorno(final Graphics g, final int x, final int y, final int ancho,
+			final int alto, Color c) {
+		++objetosDibujados;
+		g.setColor(c);
+		g.drawOval(x, y, ancho, alto);
+	}
+
+	public static void dibujarCircumferenciaContorno(final Graphics g, final int x, final int y, final int ancho,
+			final int alto) {
+		++objetosDibujados;
+		g.drawOval(x, y, ancho, alto);
+	}
+
+	public static void dibujarCircumferenciaRellena(final Graphics g, final int x, final int y, final int ancho,
+			final int alto, final Color c) {
+		++objetosDibujados;
+		g.setColor(c);
+		g.fillOval(x, y, ancho, alto);
+	}
+
+	public static void dibujarCircumferenciaRellena(final Graphics g, final int x, final int y, final int ancho,
+			final int alto) {
+		++objetosDibujados;
+		g.fillOval(x, y, ancho, alto);
+	}
+
+	public static void dibujarCircumferenciaContorno(final Graphics g, final Point p, final int ancho, final int alto,
+			Color c) {
+		++objetosDibujados;
+		g.setColor(c);
+		g.drawOval(p.x, p.y, ancho, alto);
+	}
+
+	public static void dibujarCircumferenciaContorno(final Graphics g, final Point p, final int ancho, final int alto) {
+		++objetosDibujados;
+		g.drawOval(p.x, p.y, ancho, alto);
+	}
+
+	public static void dibujarCircumferenciaRellena(final Graphics g, final Point p, final int ancho, final int alto,
+			final Color c) {
+		++objetosDibujados;
+		g.setColor(c);
+		g.fillOval(p.x, p.y, ancho, alto);
+	}
+
+	public static void dibujarCircumferenciaRellena(final Graphics g, final Point p, final int ancho, final int alto) {
+		++objetosDibujados;
+		g.fillOval(p.x, p.y, ancho, alto);
+	}
+
 	public static int getContadorObjetos() {
 		return objetosDibujados;
 	}

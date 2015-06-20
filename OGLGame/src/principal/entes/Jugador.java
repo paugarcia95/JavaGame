@@ -4,14 +4,22 @@ import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Rectangle;
 import java.awt.image.BufferedImage;
+import java.util.ArrayList;
 
 import principal.Constantes;
+import principal.VariablesGlobales;
 import principal.control.GestorControles;
+import principal.elementosJuego.accions.Accio;
+import principal.elementosJuego.accions.Atac;
+import principal.elementosJuego.objetos.EspadaBasica;
+import principal.elementosJuego.objetos.Fuerza;
+import principal.elementosJuego.objetos.Objeto;
+import principal.elementosJuego.objetos.VaritaBasica;
 import principal.herramientas.DrawerClass;
 import principal.mapas.Mapa;
 import principal.sprites.HojaSprites;
 
-public class Jugador {
+public class Jugador extends Ente {
 	private double posicionX;
 	private double posicionY;
 
@@ -24,6 +32,10 @@ public class Jugador {
 	// 3 -> dalt
 	private int direccion;
 
+	protected int expericencia = 75;
+	protected int resistencia = 600;
+	protected int recuperacion = 0;
+
 	private boolean enMovimiento;
 	private int animacion;
 	private int estado;
@@ -33,8 +45,8 @@ public class Jugador {
 
 	private Mapa mapa;
 	
-	private final int ANCHO_COLISION = 18;
-	private final int ALTO_COLISION = 15;
+	public static final int ANCHO_COLISION = 18;
+	public static final int ALTO_COLISION = 15;
 
 	private final Rectangle LIMITE_ARRIBA = new Rectangle(Constantes.CENTRO_VENTANA_X - ANCHO_COLISION / 2,
 			Constantes.CENTRO_VENTANA_Y + ALTO_COLISION, ANCHO_COLISION, 1);
@@ -44,9 +56,8 @@ public class Jugador {
 			Constantes.CENTRO_VENTANA_Y + ALTO_COLISION, 1, ALTO_COLISION);
 	private final Rectangle LIMITE_DERECHA = new Rectangle(Constantes.CENTRO_VENTANA_X + ANCHO_COLISION / 2,
 			Constantes.CENTRO_VENTANA_Y + ALTO_COLISION, 1, ALTO_COLISION);
-
-	public int resistencia = 600;
-	public int recuperacion = 0;
+	
+	private Objeto[] elementosMenu = new Objeto[10];
 
 	public Jugador(Mapa mapa) {
 		posicionX = mapa.getPosicionInicial().getX();
@@ -62,14 +73,94 @@ public class Jugador {
 		hs = new HojaSprites(Constantes.RUTA_PERSONAJE, Constantes.ANCHO_PERSONAJE,
 				Constantes.ALTO_PERSONAJE, false);
 		imagenActual = hs.getSprite(0).getImagen();
+
+		elementosMenu[0] = new Fuerza();
+		elementosMenu[1] = new EspadaBasica();
+		elementosMenu[2] = new VaritaBasica();
+
+		VariablesGlobales.RectanguloColisionJugador = new Rectangle(LIMITE_ARRIBA.x, LIMITE_ARRIBA.y,
+				LIMITE_ARRIBA.width + 1, LIMITE_DERECHA.height + 1);
+	}
+
+	public void mover(Mapa mapa) {
+		posicionX = mapa.getPosicionInicial().getX();
+		posicionY = mapa.getPosicionInicial().getY();
+
+		this.mapa = mapa;
+	}
+
+	private void gestionarResistencia() {
+		if (recuperacion < Constantes.MAX_RECUPERACION) {
+			++recuperacion;
+		}
+		if (recuperacion == Constantes.MAX_RECUPERACION && resistencia < 600) {
+			++resistencia;
+		}
+
+		if (GestorControles.teclado.corriendo && resistencia > 0) {
+			velocidad = 2;
+		} else {
+			velocidad = 1;
+		}
+	}
+
+	private void restarResistencia() {
+		if (GestorControles.teclado.corriendo) {
+			if (resistencia > 0) {
+				resistencia -= 2;
+			} else
+				resistencia = 0;
+			if (recuperacion > 0) {
+				recuperacion -= 2;
+			}
+		}
+	}
+
+	private void gestionarPm() {
+		if (lvlP > 0) {
+			if (recargaPm < Constantes.MAX_RECARGA_PM) {
+				++recargaPm;
+			}
+			if (recargaPm == Constantes.MAX_RECARGA_PM && pm < Constantes.MAX_VARIABLES) {
+				++pm;
+			}
+		}
+	}
+
+	public void realizaAccio(int x) {
+		if (elementosMenu[x] == null) {
+			mapa.setError(Constantes.E_OBJECTE_BUIT);
+		} else {
+			if (elementosMenu[x].getFormaUs() == 1) {
+				if (mapa.getEnemicClicat() != null) {
+					mapa.getEnemicClicat().setAccion(elementosMenu[x].usar(this));
+				} else {
+					mapa.setError(Constantes.E_CAP_ENEMIC_SELECCIONAT);
+				}
+			}
+		}
 	}
 
 	public void actualizar() {
+		gestionarAccionesPendientes();
 		gestionarResistencia();
+		gestionarPm();
 		cambiarAnimacionEstado();
 		enMovimiento = false;
 		determinarDireccion();
 		animar();
+	}
+
+	private void gestionarAccionesPendientes() {
+		ArrayList<Accio> accions = mapa.getAccionsPendents();
+
+		for (int i = 0; i < accions.size(); ++i) {
+			if (accions.get(i).getType().equals("ATAC")) {
+				Atac atac = (Atac) accions.get(i);
+				atac.getHurt(this);
+			}
+		}
+		mapa.clearAccionsPendents();
 	}
 
 	private void cambiarAnimacionEstado() {
@@ -91,7 +182,6 @@ public class Jugador {
 		} else {
 			estado = 0;
 		}
-
 	}
 
 	private void determinarDireccion() {
@@ -175,33 +265,6 @@ public class Jugador {
 		}
 	}
 
-	private void gestionarResistencia() {
-		if (recuperacion < Constantes.MAX_RECUPERACION) {
-			++recuperacion;
-		}
-		if (recuperacion == 100 && resistencia < 600) {
-			++resistencia;
-		}
-
-		if (GestorControles.teclado.corriendo && resistencia > 0) {
-			velocidad = 2;
-		} else {
-			velocidad = 1;
-		}
-	}
-
-	private void restarResistencia() {
-		if (GestorControles.teclado.corriendo) {
-			if (resistencia > 0) {
-				resistencia -= 2;
-			} else
-				resistencia = 0;
-			if (recuperacion > 0) {
-				recuperacion -= 2;
-			}
-		}
-	}
-
 	private boolean enColisionArriba(int velocidadY) {
 		for (int r = 0; r < mapa.areasColision.size(); ++r) {
 			final Rectangle area = mapa.areasColision.get(r);
@@ -209,7 +272,7 @@ public class Jugador {
 			int origenX = area.x;
 			int origenY = area.y + velocidadY * velocidad + 3 * velocidad;
 
-			final Rectangle areaFutura = new Rectangle(origenX, origenY, Constantes.LADO_SPRITE, Constantes.LADO_SPRITE);
+			final Rectangle areaFutura = new Rectangle(origenX, origenY, area.width, area.height);
 
 			if (LIMITE_ARRIBA.intersects(areaFutura)) {
 				return true;
@@ -225,7 +288,7 @@ public class Jugador {
 			int origenX = area.x;
 			int origenY = area.y + velocidadY * velocidad - 3 * velocidad;
 
-			final Rectangle areaFutura = new Rectangle(origenX, origenY, Constantes.LADO_SPRITE, Constantes.LADO_SPRITE);
+			final Rectangle areaFutura = new Rectangle(origenX, origenY, area.width, area.height);
 
 			if (LIMITE_ABAJO.intersects(areaFutura)) {
 				return true;
@@ -241,7 +304,7 @@ public class Jugador {
 			int origenX = area.x + velocidadX * velocidad + 3 * velocidad;
 			int origenY = area.y;
 
-			final Rectangle areaFutura = new Rectangle(origenX, origenY, Constantes.LADO_SPRITE, Constantes.LADO_SPRITE);
+			final Rectangle areaFutura = new Rectangle(origenX, origenY, area.width, area.height);
 
 			if (LIMITE_IZQUIERDA.intersects(areaFutura)) {
 				return true;
@@ -257,7 +320,7 @@ public class Jugador {
 			int origenX = area.x + velocidadX * velocidad - 3 * velocidad;
 			int origenY = area.y;
 
-			final Rectangle areaFutura = new Rectangle(origenX, origenY, Constantes.LADO_SPRITE, Constantes.LADO_SPRITE);
+			final Rectangle areaFutura = new Rectangle(origenX, origenY, area.width, area.height);
 
 			if (LIMITE_DERECHA.intersects(areaFutura)) {
 				return true;
@@ -333,7 +396,7 @@ public class Jugador {
 		
 		DrawerClass.dibujarImagen(g, imagenActual, centroX, centroY);
 
-		if (Constantes.debug2)
+		if (VariablesGlobales.debug2)
 			dibuixaRectanglesColisio(g);
 	}
 
@@ -364,6 +427,26 @@ public class Jugador {
 
 	public double getVelocitat() {
 		return velocidad;
+	}
+
+	public Objeto[] getElementosMenu() {
+		return elementosMenu;
+	}
+
+	public void setElementosMenu(Objeto[] elementosMenu) {
+		this.elementosMenu = elementosMenu;
+	}
+
+	public int getResistencia() {
+		return resistencia;
+	}
+
+	public int getRecuperacion() {
+		return recuperacion;
+	}
+
+	public int getExpericencia() {
+		return expericencia;
 	}
 
 	public Rectangle getLIMITE_ARRIBA() {

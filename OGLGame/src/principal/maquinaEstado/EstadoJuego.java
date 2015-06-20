@@ -7,4 +7,6 @@ public interface EstadoJuego {
 	
 	void actualizar();
 	void dibujar(final Graphics g);
+	void limpiarPantalla(Graphics g);
+	void reanudar();
 }

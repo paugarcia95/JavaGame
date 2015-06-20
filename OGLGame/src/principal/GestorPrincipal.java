@@ -85,6 +85,16 @@ public class GestorPrincipal {
 				framesAcomulados = 0;
 				referenciaContador = System.nanoTime();
 			}
+
+			if (VariablesGlobales.cambioEstado) {
+				if (VariablesGlobales.pause)
+					ge.cambiarEstadoActual(1);
+				else
+					ge.cambiarEstadoActual(0);
+
+				// Indico que el cambio ya se ha realizado
+				VariablesGlobales.cambioEstado = false;
+			}
 		}
 	}
 
