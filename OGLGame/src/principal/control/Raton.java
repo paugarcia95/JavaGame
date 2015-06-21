@@ -12,13 +12,13 @@ import java.util.ArrayList;
 
 import javax.swing.SwingUtilities;
 
+import estadoJuego.entes.Enemigo;
+import estadoJuego.interfazUsuario.MenuInferior;
+import estadoJuego.mapas.Mapa;
 import principal.Constantes;
 import principal.VariablesGlobales;
-import principal.entes.Enemigo;
 import principal.graficos.SuperficieDibujo;
 import principal.herramientas.CargadorRecursos;
-import principal.interfazUsuario.MenuInferior;
-import principal.mapas.Mapa;
 
 public class Raton extends MouseAdapter {
 	private final Cursor cursor;

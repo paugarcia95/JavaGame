@@ -3,9 +3,9 @@ package principal.maquinaEstado.juego;
 import java.awt.Color;
 import java.awt.Graphics;
 
+import estadoJuego.interfazUsuario.MenuInferior;
 import principal.Constantes;
 import principal.herramientas.DrawerClass;
-import principal.interfazUsuario.MenuInferior;
 import principal.maquinaEstado.EstadoJuego;
 
 public class Pause implements EstadoJuego {

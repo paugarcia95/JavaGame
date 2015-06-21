@@ -1,4 +1,4 @@
-package principal.entes;
+package estadoJuego.entes;
 
 import java.awt.Rectangle;
 

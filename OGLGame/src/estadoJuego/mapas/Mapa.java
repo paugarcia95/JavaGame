@@ -1,4 +1,4 @@
-package principal.mapas;
+package estadoJuego.mapas;
 
 import java.awt.Color;
 import java.awt.Graphics;
@@ -7,18 +7,18 @@ import java.awt.Rectangle;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 
+import estadoJuego.elementosJuego.accions.Accio;
+import estadoJuego.entes.Enemigo;
+import estadoJuego.entes.enemigos.Sombra;
+import estadoJuego.interfazUsuario.MenuInferior;
+import estadoJuego.sprites.HojaSprites;
+import estadoJuego.sprites.Sprite;
 import principal.Constantes;
 import principal.VariablesGlobales;
 import principal.control.GestorControles;
-import principal.elementosJuego.accions.Accio;
-import principal.entes.Enemigo;
-import principal.entes.enemigos.Sombra;
 import principal.herramientas.CargadorRecursos;
 import principal.herramientas.Colores;
 import principal.herramientas.DrawerClass;
-import principal.interfazUsuario.MenuInferior;
-import principal.sprites.HojaSprites;
-import principal.sprites.Sprite;
 
 public class Mapa {
 	private String[] partes;

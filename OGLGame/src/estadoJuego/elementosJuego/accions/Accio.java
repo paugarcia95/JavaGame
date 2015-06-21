@@ -1,4 +1,4 @@
-package principal.elementosJuego.accions;
+package estadoJuego.elementosJuego.accions;
 
 
 public class Accio {

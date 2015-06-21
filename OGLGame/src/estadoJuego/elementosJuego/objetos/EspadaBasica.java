@@ -1,9 +1,9 @@
-package principal.elementosJuego.objetos;
+package estadoJuego.elementosJuego.objetos;
 
+import estadoJuego.elementosJuego.accions.Accio;
+import estadoJuego.elementosJuego.accions.Atac;
+import estadoJuego.entes.Jugador;
 import principal.Constantes;
-import principal.elementosJuego.accions.Accio;
-import principal.elementosJuego.accions.Atac;
-import principal.entes.Jugador;
 
 public class EspadaBasica extends Objeto {
 

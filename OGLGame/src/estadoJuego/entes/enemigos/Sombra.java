@@ -1,14 +1,14 @@
-package principal.entes.enemigos;
+package estadoJuego.entes.enemigos;
 
 import java.awt.Rectangle;
 import java.util.Random;
 
+import estadoJuego.elementosJuego.accions.Accio;
+import estadoJuego.elementosJuego.accions.Atac;
+import estadoJuego.elementosJuego.accions.Mort;
+import estadoJuego.entes.Enemigo;
+import estadoJuego.mapas.Mapa;
 import principal.Constantes;
-import principal.elementosJuego.accions.Accio;
-import principal.elementosJuego.accions.Atac;
-import principal.elementosJuego.accions.Mort;
-import principal.entes.Enemigo;
-import principal.mapas.Mapa;
 
 public class Sombra extends Enemigo {
 

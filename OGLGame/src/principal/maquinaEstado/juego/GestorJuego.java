@@ -6,14 +6,14 @@ import java.awt.Point;
 import java.awt.Rectangle;
 import java.util.ArrayList;
 
+import estadoJuego.entes.Jugador;
+import estadoJuego.interfazUsuario.MenuInferior;
+import estadoJuego.mapas.Mapa;
 import principal.Constantes;
 import principal.GestorPrincipal;
 import principal.VariablesGlobales;
-import principal.entes.Jugador;
 import principal.graficos.SuperficieDibujo;
 import principal.herramientas.DrawerClass;
-import principal.interfazUsuario.MenuInferior;
-import principal.mapas.Mapa;
 import principal.maquinaEstado.EstadoJuego;
 
 public class GestorJuego implements EstadoJuego {

@@ -2,8 +2,8 @@ package principal;
 
 import java.awt.Font;
 
+import estadoJuego.sprites.HojaSprites;
 import principal.herramientas.CargadorRecursos;
-import principal.sprites.HojaSprites;
 
 public final class Constantes {
 

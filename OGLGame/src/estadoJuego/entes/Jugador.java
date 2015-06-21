@@ -1,4 +1,4 @@
-package principal.entes;
+package estadoJuego.entes;
 
 import java.awt.Color;
 import java.awt.Graphics;
@@ -6,18 +6,18 @@ import java.awt.Rectangle;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 
+import estadoJuego.elementosJuego.accions.Accio;
+import estadoJuego.elementosJuego.accions.Atac;
+import estadoJuego.elementosJuego.objetos.EspadaBasica;
+import estadoJuego.elementosJuego.objetos.Fuerza;
+import estadoJuego.elementosJuego.objetos.Objeto;
+import estadoJuego.elementosJuego.objetos.VaritaBasica;
+import estadoJuego.mapas.Mapa;
+import estadoJuego.sprites.HojaSprites;
 import principal.Constantes;
 import principal.VariablesGlobales;
 import principal.control.GestorControles;
-import principal.elementosJuego.accions.Accio;
-import principal.elementosJuego.accions.Atac;
-import principal.elementosJuego.objetos.EspadaBasica;
-import principal.elementosJuego.objetos.Fuerza;
-import principal.elementosJuego.objetos.Objeto;
-import principal.elementosJuego.objetos.VaritaBasica;
 import principal.herramientas.DrawerClass;
-import principal.mapas.Mapa;
-import principal.sprites.HojaSprites;
 
 public class Jugador extends Ente {
 	private double posicionX;

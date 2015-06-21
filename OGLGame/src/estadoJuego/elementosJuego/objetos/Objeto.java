@@ -1,11 +1,11 @@
-package principal.elementosJuego.objetos;
+package estadoJuego.elementosJuego.objetos;
 
 import java.awt.Rectangle;
 import java.awt.image.BufferedImage;
 
-import principal.elementosJuego.accions.Accio;
-import principal.entes.Ente;
-import principal.entes.Jugador;
+import estadoJuego.elementosJuego.accions.Accio;
+import estadoJuego.entes.Ente;
+import estadoJuego.entes.Jugador;
 
 public abstract class Objeto {
 	protected BufferedImage sprite;

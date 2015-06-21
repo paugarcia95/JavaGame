@@ -1,14 +1,14 @@
-package principal.interfazUsuario;
+package estadoJuego.interfazUsuario;
 
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Rectangle;
 import java.awt.image.BufferedImage;
 
+import estadoJuego.elementosJuego.objetos.Objeto;
+import estadoJuego.entes.Jugador;
 import principal.Constantes;
 import principal.control.GestorControles;
-import principal.elementosJuego.objetos.Objeto;
-import principal.entes.Jugador;
 import principal.herramientas.Colores;
 import principal.herramientas.DrawerClass;
 

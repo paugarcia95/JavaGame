@@ -1,7 +1,7 @@
 package principal.control;
 
-import principal.interfazUsuario.MenuInferior;
-import principal.mapas.Mapa;
+import estadoJuego.interfazUsuario.MenuInferior;
+import estadoJuego.mapas.Mapa;
 
 public final class GestorControles {
 	private static Mapa mapa = null;

@@ -1,8 +1,8 @@
-package principal.elementosJuego.accions;
+package estadoJuego.elementosJuego.accions;
 
 import java.util.Random;
 
-import principal.entes.Ente;
+import estadoJuego.entes.Ente;
 
 public class Atac extends Accio {
 	private int lvlP1;

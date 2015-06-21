@@ -1,16 +1,16 @@
-package principal.entes;
+package estadoJuego.entes;
 
 import java.awt.Graphics;
 import java.awt.Rectangle;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 
+import estadoJuego.elementosJuego.accions.Accio;
+import estadoJuego.mapas.Mapa;
+import estadoJuego.sprites.HojaSprites;
 import principal.Constantes;
 import principal.VariablesGlobales;
-import principal.elementosJuego.accions.Accio;
 import principal.herramientas.DrawerClass;
-import principal.mapas.Mapa;
-import principal.sprites.HojaSprites;
 
 public abstract class Enemigo extends Ente {
 	protected Mapa mapa;
