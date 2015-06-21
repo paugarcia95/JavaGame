@@ -57,7 +57,14 @@ public class Jugador extends Ente {
 	private final Rectangle LIMITE_DERECHA = new Rectangle(Constantes.CENTRO_VENTANA_X + ANCHO_COLISION / 2,
 			Constantes.CENTRO_VENTANA_Y + ALTO_COLISION, 1, ALTO_COLISION);
 	
+	private final Rectangle areaAtaque = new Rectangle(
+			Constantes.CENTRO_VENTANA_X - Constantes.ANCHO_PERSONAJE / 2, 
+			Constantes.CENTRO_VENTANA_Y - Constantes.ANCHO_PERSONAJE / 2, 
+			Constantes.ANCHO_PERSONAJE,
+			Constantes.ALTO_PERSONAJE);
+
 	private Objeto[] elementosMenu = new Objeto[10];
+	private int elementoSelecionado = 0;
 
 	public Jugador(Mapa mapa) {
 		posicionX = mapa.getPosicionInicial().getX();
@@ -128,12 +135,16 @@ public class Jugador extends Ente {
 	}
 
 	public void realizaAccio(int x) {
+		elementoSelecionado = x;
 		if (elementosMenu[x] == null) {
 			mapa.setError(Constantes.E_OBJECTE_BUIT);
 		} else {
 			if (elementosMenu[x].getFormaUs() == 1) {
 				if (mapa.getEnemicClicat() != null) {
-					mapa.getEnemicClicat().setAccion(elementosMenu[x].usar(this));
+					if (elementosMenu[x].dentroAreaAccion(this, mapa.getEnemicClicat()))
+						mapa.getEnemicClicat().setAccion(elementosMenu[x].usar(this));
+					else
+						mapa.setError(Constantes.E_ENEMIGO_FUERA_ALCANZE);
 				} else {
 					mapa.setError(Constantes.E_CAP_ENEMIC_SELECCIONAT);
 				}
@@ -142,6 +153,7 @@ public class Jugador extends Ente {
 	}
 
 	public void actualizar() {
+		actualizarElementosMenu();
 		gestionarAccionesPendientes();
 		gestionarResistencia();
 		gestionarPm();
@@ -149,6 +161,13 @@ public class Jugador extends Ente {
 		enMovimiento = false;
 		determinarDireccion();
 		animar();
+	}
+
+	private void actualizarElementosMenu() {
+		for (int x = 0; x < 10; ++x) {
+			if (elementosMenu[x] != null)
+				elementosMenu[x].actualizar();
+		}
 	}
 
 	private void gestionarAccionesPendientes() {
@@ -403,6 +422,17 @@ public class Jugador extends Ente {
 	private void dibuixaRectanglesColisio(Graphics g) {
 		DrawerClass.dibujarRectanguloContorno(g, new Rectangle(LIMITE_ARRIBA.x, LIMITE_ARRIBA.y,
 				LIMITE_ARRIBA.width + 1, LIMITE_DERECHA.height + 1), Color.MAGENTA);
+
+		// Dibuixa area d'atac
+		DrawerClass.dibujarRectanguloContorno(g, this.getAreaAtaqueReal(), Color.BLUE);
+	}
+	
+	public Rectangle getAreaAtaque() {
+		return areaAtaque;
+	}
+
+	public Rectangle getAreaAtaqueReal() {
+		return elementosMenu[elementoSelecionado].getAreaAtaque(this);
 	}
 
 	public void setPosicionX(double posicionX) {

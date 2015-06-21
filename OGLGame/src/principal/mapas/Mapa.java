@@ -459,7 +459,7 @@ public class Mapa {
 		accionsPendents.add(accioRetorn);
 	}
 
-	public ArrayList getAccionsPendents() {
+	public ArrayList<Accio> getAccionsPendents() {
 		return accionsPendents;
 	}
 

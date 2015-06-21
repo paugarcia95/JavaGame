@@ -9,6 +9,8 @@ public class VaritaBasica extends Objeto {
 	public VaritaBasica() {
 		super();
 		sprite = Constantes.HOJA_SPRITES_MENU.getSprite(2, 1).getImagen();
+
+		radioAccion = 15;
 	}
 
 	@Override

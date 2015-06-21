@@ -80,6 +80,7 @@ public class GestorPrincipal {
 			if (System.nanoTime() - referenciaContador > NS_POR_SEGUNDO) {
 				aps = actualizacionesAcomuladas;
 				fps = framesAcomulados;
+				System.out.println(fps);
 
 				actualizacionesAcomuladas = 0;
 				framesAcomulados = 0;

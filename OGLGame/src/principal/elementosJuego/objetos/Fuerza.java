@@ -9,6 +9,8 @@ public class Fuerza extends Objeto {
 	public Fuerza() {
 		super();
 		sprite = Constantes.HOJA_SPRITES_MENU.getSprite(0, 2).getImagen();
+
+		radioAccion = 4;
 	}
 
 	@Override

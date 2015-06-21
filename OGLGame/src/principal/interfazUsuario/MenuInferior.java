@@ -21,8 +21,8 @@ public class MenuInferior {
 			areaInventario.width, 1);
 
 	private final Jugador jugador;
-	private boolean accioPremuda = false;
 
+	private boolean accioPremuda = false;
 	private int elementoSelecionado = 0;
 
 	public MenuInferior(final Jugador jugador) {
@@ -129,6 +129,21 @@ public class MenuInferior {
 			Objeto a = jugador.getElementosMenu()[x];
 			if (a != null) {
 				DrawerClass.dibujarImagen(g, a.getSprite(), POSICIO_X + x * 38, POSICIO_Y);
+
+				if (!a.sePuedeUtilizar()) {
+					DrawerClass.dibujarRectanguloRelleno(g, 
+							POSICIO_X + x * 38, 
+							POSICIO_Y, 
+							Constantes.LADO_SPRITE,
+							Constantes.LADO_SPRITE, 
+							new Color(150, 150, 150, 100 - a.getNextUse() * 100 / a.getMaxTimeToUse() + 80));
+					
+					DrawerClass.dibujarRectanguloRelleno(g, 
+							POSICIO_X + x * 38, 
+							POSICIO_Y + 29,
+							32 - a.getNextUse() * 32 / a.getMaxTimeToUse(), 
+							3, new Color (195, 0, 110));
+				}
 			}
 		}
 	}

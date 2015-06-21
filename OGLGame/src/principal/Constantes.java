@@ -48,10 +48,12 @@ public final class Constantes {
 	public static final int MAX_ARMERY = 5;
 
 	public static final int MAX_RECARGA_PM = 2000;
+	public static final int MAX_DISTANCIA_PARA_ATACAR = 15;
 
 	// Missatges ERROR
 	public static final String E_CAP_ENEMIC_SELECCIONAT = "No puedes realizar esta acción. Debes seleccionar un enemigo";
 	public static final String E_OBJECTE_BUIT = "No tienes ninguna acción asociada a este botón";
+	public static final String E_ENEMIGO_FUERA_ALCANZE = "El objetivo está fuera de tu alcanze";
 
 	public static final int MAX_INTENSITAT_COLOR_ERROR = 0xff;
 

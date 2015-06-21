@@ -110,6 +110,7 @@ public abstract class Enemigo extends Ente {
 		this.lvlP = lvlP;
 	}
 
+	public abstract Rectangle getAreaAtaque();
 	protected abstract Accio actualizarVariables(final Accio accio);
 	protected void actualitzarVariablesDespres() {}
 
@@ -268,4 +269,7 @@ public abstract class Enemigo extends Ente {
 	public void setAccion(Accio accion) {
 		accionTurno = accion;
 	}
+
+
 }
+

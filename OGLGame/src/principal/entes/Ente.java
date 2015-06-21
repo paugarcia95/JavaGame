@@ -1,5 +1,7 @@
 package principal.entes;
 
+import java.awt.Rectangle;
+
 import principal.Constantes;
 
 public abstract class Ente {
@@ -12,12 +14,9 @@ public abstract class Ente {
 	protected int pm = 188;
 
 	protected int recargaPm = 0;
-
 	protected double armery = 0;
 
-	public Ente() {
-		// TODO Auto-generated constructor stub
-	}
+	public abstract Rectangle getAreaAtaque();
 
 	public String getNombre() {
 		return nombre;

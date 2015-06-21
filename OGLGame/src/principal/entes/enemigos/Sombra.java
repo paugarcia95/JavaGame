@@ -1,5 +1,6 @@
 package principal.entes.enemigos;
 
+import java.awt.Rectangle;
 import java.util.Random;
 
 import principal.Constantes;
@@ -190,5 +191,9 @@ public class Sombra extends Enemigo {
 		}
 
 		imagenActual = hs.getSprite(estado, 7).getImagen();
+	}
+
+	public Rectangle getAreaAtaque() {
+		return COLISION;
 	}
 }
