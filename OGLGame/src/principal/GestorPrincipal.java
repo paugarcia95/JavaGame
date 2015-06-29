@@ -20,6 +20,10 @@ public class GestorPrincipal {
 	private static int fps = 0;
 	private static int aps = 0;
 
+	private static double fpsMedios = 0;
+	private static double apsMedios = 0;
+	private int numIteraciones = 0;
+
 	private GestorPrincipal(final String titulo, final int ancho, final int alto) {
 		this.titulo = titulo;
 		this.ancho = ancho;
@@ -60,6 +64,9 @@ public class GestorPrincipal {
 		double tiempoTranscurrido;
 		double delta = 0; // Cantidad de tiempo entre actualizacion
 
+		ThreadGraficos thread = new ThreadGraficos();
+		thread.start();
+
 		while (enFuncionamiento) {
 			final long inicioBucle = System.nanoTime();
 
@@ -74,13 +81,16 @@ public class GestorPrincipal {
 				--delta;
 			}
 
-			dibujar();
+			// Dibuixa els gráfics
+			thread.run();
 			++framesAcomulados;
 
 			if (System.nanoTime() - referenciaContador > NS_POR_SEGUNDO) {
 				aps = actualizacionesAcomuladas;
 				fps = framesAcomulados;
-				System.out.println(fps);
+				
+				/** Descomentar si vull fer debug */
+				// actualizarMedia();
 
 				actualizacionesAcomuladas = 0;
 				framesAcomulados = 0;
@@ -88,14 +98,21 @@ public class GestorPrincipal {
 			}
 
 			if (VariablesGlobales.cambioEstado) {
-				if (VariablesGlobales.pause)
+				if (VariablesGlobales.EstadoPause)
 					ge.cambiarEstadoActual(1);
+				else if (VariablesGlobales.EstadoCreacioMapes)
+					ge.cambiarEstadoActual(2);
 				else
 					ge.cambiarEstadoActual(0);
 
 				// Indico que el cambio ya se ha realizado
 				VariablesGlobales.cambioEstado = false;
 			}
+		}
+		try {
+			thread.join();
+		} catch (InterruptedException e) {
+			thread.interrupt();
 		}
 	}
 
@@ -104,7 +121,20 @@ public class GestorPrincipal {
 		sd.actualizar();
 	}
 
-	private void dibujar() {
+	@SuppressWarnings("unused")
+	private void actualizarMedia() {
+		fpsMedios *= numIteraciones;
+		apsMedios *= numIteraciones;
+		fpsMedios += fps;
+		apsMedios += aps;
+		++numIteraciones;
+		fpsMedios /= numIteraciones;
+		apsMedios /= numIteraciones;
+
+		System.out.println(fpsMedios);
+	}
+
+	private synchronized void dibujar() {
 		sd.dibujar(ge);
 	}
 
@@ -114,6 +144,20 @@ public class GestorPrincipal {
 
 	public static int getAps() {
 		return aps;
+	}
+
+	public static double getFpsMedios() {
+		return fpsMedios;
+	}
+
+	public static double getApsMedios() {
+		return apsMedios;
+	}
+
+	private class ThreadGraficos extends Thread {
+		public synchronized void run() {
+			dibujar();
+		}
 	}
 
 }

@@ -3,12 +3,12 @@ package estadoJuego.entes.enemigos;
 import java.awt.Rectangle;
 import java.util.Random;
 
+import principal.Constantes;
 import estadoJuego.elementosJuego.accions.Accio;
 import estadoJuego.elementosJuego.accions.Atac;
 import estadoJuego.elementosJuego.accions.Mort;
 import estadoJuego.entes.Enemigo;
 import estadoJuego.mapas.Mapa;
-import principal.Constantes;
 
 public class Sombra extends Enemigo {
 
@@ -32,7 +32,7 @@ public class Sombra extends Enemigo {
 			animacion = 0;
 			actualitzaAtacat((Atac) accio);
 			accioRetorn = new Atac(this);
-		} else if (!siendoAtacado) {
+		} else if (!siendoAtacado && !acabadoNacer) {
 			actualizarMovimiento();
 		}
 
@@ -81,11 +81,46 @@ public class Sombra extends Enemigo {
 		if (vt == 0) {
 			actualitzarSpriteMort();
 			estaVivo = false;
+		} else if (acabadoNacer) {
+			actualizarSpriteNacer();
 		} else if (siendoAtacado) {
 			actualitzarSpriteAtacat();
 		} else {
 			actualizarSpriteMoviment();
 		}
+	}
+
+	private void actualizarSpriteNacer() {
+		final int velocitatAnimacio = 54;
+
+		if (animacion < velocitatAnimacio) {
+			++animacion;
+		} else {
+			animacion = 0;
+		}
+
+		if (animacion < velocitatAnimacio / 9) {
+			estado = 0;
+		} else if (animacion < velocitatAnimacio * 2 / 9) {
+			estado = 1;
+		} else if (animacion < velocitatAnimacio * 3 / 9) {
+			estado = 2;
+		} else if (animacion < velocitatAnimacio * 4 / 9) {
+			estado = 3;
+		} else if (animacion < velocitatAnimacio * 5 / 9) {
+			estado = 4;
+		} else if (animacion < velocitatAnimacio * 6 / 9) {
+			estado = 5;
+		} else if (animacion < velocitatAnimacio * 7 / 9) {
+			estado = 6;
+		} else if (animacion < velocitatAnimacio * 8 / 9) {
+			estado = 7;
+		} else {
+			estado = 8;
+			acabadoNacer = false;
+		}
+
+		imagenActual = hs.getSprite(estado, 4).getImagen();
 	}
 
 	private void actualizarSpriteMoviment() {

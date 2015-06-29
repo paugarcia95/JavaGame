@@ -1,4 +1,4 @@
-package estadoJuego.sprites;
+package principal.sprites;
 
 import java.awt.image.BufferedImage;
 

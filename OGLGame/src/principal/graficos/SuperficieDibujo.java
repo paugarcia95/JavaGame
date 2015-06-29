@@ -42,6 +42,7 @@ public class SuperficieDibujo extends Canvas {
 	
 	public void actualizar() {
 		raton.actualizar(this);
+		setCursor(raton.getCursor());
 	}
 
 	public void dibujar(final GestorEstados ge) {
@@ -60,8 +61,10 @@ public class SuperficieDibujo extends Canvas {
 		if (Constantes.FACTOR_ESCALADO_X != 1.0 || Constantes.FACTOR_ESCALADO_Y != 1.0) {
 			g.scale(Constantes.FACTOR_ESCALADO_X, Constantes.FACTOR_ESCALADO_Y);
 		}
-		
+
 		ge.dibujar(g);
+
+		// Raton.dibujar(g);
 
 		// Serveix perqe pinti les imatges sincronitzades amb la teva pantalla
 		Toolkit.getDefaultToolkit().sync();

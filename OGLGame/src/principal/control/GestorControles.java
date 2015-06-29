@@ -1,11 +1,9 @@
 package principal.control;
 
-import estadoJuego.interfazUsuario.MenuInferior;
 import estadoJuego.mapas.Mapa;
 
 public final class GestorControles {
 	private static Mapa mapa = null;
-	private static MenuInferior menuInferior = null;
 
 	public static final Teclado teclado = new Teclado();
 	// public static final Raton raton = new Raton();
@@ -14,15 +12,7 @@ public final class GestorControles {
 		mapa = map;
 	}
 
-	public static void setMenuInferior(MenuInferior menu) {
-		menuInferior = menu;
-	}
-
 	public static Mapa getMapa() {
 		return mapa;
-	}
-
-	public static MenuInferior getMenuInferior() {
-		return menuInferior;
 	}
 }

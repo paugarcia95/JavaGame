@@ -5,12 +5,12 @@ import java.awt.Rectangle;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 
-import estadoJuego.elementosJuego.accions.Accio;
-import estadoJuego.mapas.Mapa;
-import estadoJuego.sprites.HojaSprites;
 import principal.Constantes;
 import principal.VariablesGlobales;
 import principal.herramientas.DrawerClass;
+import principal.sprites.HojaSprites;
+import estadoJuego.elementosJuego.accions.Accio;
+import estadoJuego.mapas.Mapa;
 
 public abstract class Enemigo extends Ente {
 	protected Mapa mapa;
@@ -42,6 +42,7 @@ public abstract class Enemigo extends Ente {
 	protected Rectangle COLISION;
 
 	protected boolean estaVivo = true;
+	protected boolean acabadoNacer = true;
 
 	private Accio accionTurno = null;
 

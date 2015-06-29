@@ -4,6 +4,10 @@ import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 
 import principal.VariablesGlobales;
+import principal.maquinaEstado.GestorEstados;
+import estadoCreacionMapas.MenuInferior2;
+import estadoCreacionMapas.SuperficieCreacion;
+import estadoJuego.interfazUsuario.MenuInferior;
 
 public final class Teclado implements KeyListener {
 
@@ -12,23 +16,19 @@ public final class Teclado implements KeyListener {
 	public Tecla derecha = new Tecla();
 	public Tecla izquierda = new Tecla();
 
-	public boolean corriendo = false;
+	public boolean shift = false;
 
 	@Override
 	public void keyPressed(KeyEvent e) {
-		if (VariablesGlobales.pause) {
-			switch (e.getKeyCode()) {
-				case KeyEvent.VK_P :
-					VariablesGlobales.pause = !VariablesGlobales.pause;
-					VariablesGlobales.cambioEstado = true;
-					break;
-				case KeyEvent.VK_ESCAPE :
-					System.exit(0);
-			}
-			return;
-		}
-
 		switch (e.getKeyCode()) {
+			case KeyEvent.VK_M :
+				VariablesGlobales.EstadoCreacioMapes = !VariablesGlobales.EstadoCreacioMapes;
+				VariablesGlobales.cambioEstado = true;
+				break;
+			case KeyEvent.VK_P :
+				VariablesGlobales.EstadoPause = !VariablesGlobales.EstadoPause;
+				VariablesGlobales.cambioEstado = true;
+				break;
 			case KeyEvent.VK_W :
 				arriba.teclaPulsada();
 				break;
@@ -41,58 +41,84 @@ public final class Teclado implements KeyListener {
 			case KeyEvent.VK_A :
 				izquierda.teclaPulsada();
 				break;
+			case KeyEvent.VK_ESCAPE :
+				System.exit(0);
+				break;
+		}
+
+		switch (GestorEstados.getEstadoActual()) {
+			case 0 :
+				funcionsKeyPressedJoc(e);
+				break;
+			case 2 :
+				funcionsKeyPressedCreacioMapes(e);
+				break;
+		}
+
+	}
+
+
+	private void funcionsKeyPressedCreacioMapes(KeyEvent e) {
+		switch (e.getKeyCode()) {
+			case KeyEvent.VK_SPACE :
+				MenuInferior2.clickObjeto1o2();
+				break;
+			case KeyEvent.VK_G :
+				SuperficieCreacion.guardar();
+		}
+
+	}
+
+	private void funcionsKeyPressedJoc(KeyEvent e) {
+		switch (e.getKeyCode()) {
 			case KeyEvent.VK_SHIFT :
-				corriendo = true;
+				shift = true;
 				break;
 			case KeyEvent.VK_1 :
-				GestorControles.getMenuInferior().seleccionarElemento(0);
-				GestorControles.getMenuInferior().accioPremuda();
+				MenuInferior.seleccionarElemento(0);
+				MenuInferior.accioPremuda();
 				break;
 			case KeyEvent.VK_2 :
-				GestorControles.getMenuInferior().seleccionarElemento(1);
-				GestorControles.getMenuInferior().accioPremuda();
+				MenuInferior.seleccionarElemento(1);
+				MenuInferior.accioPremuda();
 				break;
 			case KeyEvent.VK_3 :
-				GestorControles.getMenuInferior().seleccionarElemento(2);
-				GestorControles.getMenuInferior().accioPremuda();
+				MenuInferior.seleccionarElemento(2);
+				MenuInferior.accioPremuda();
 				break;
 			case KeyEvent.VK_4 :
-				GestorControles.getMenuInferior().seleccionarElemento(3);
-				GestorControles.getMenuInferior().accioPremuda();
+				MenuInferior.seleccionarElemento(3);
+				MenuInferior.accioPremuda();
 				break;
 			case KeyEvent.VK_5 :
-				GestorControles.getMenuInferior().seleccionarElemento(4);
-				GestorControles.getMenuInferior().accioPremuda();
+				MenuInferior.seleccionarElemento(4);
+				MenuInferior.accioPremuda();
 				break;
 			case KeyEvent.VK_6 :
-				GestorControles.getMenuInferior().seleccionarElemento(5);
-				GestorControles.getMenuInferior().accioPremuda();
+				MenuInferior.seleccionarElemento(5);
+				MenuInferior.accioPremuda();
 				break;
 			case KeyEvent.VK_7 :
-				GestorControles.getMenuInferior().seleccionarElemento(6);
-				GestorControles.getMenuInferior().accioPremuda();
+				MenuInferior.seleccionarElemento(6);
+				MenuInferior.accioPremuda();
 				break;
 			case KeyEvent.VK_8 :
-				GestorControles.getMenuInferior().seleccionarElemento(7);
-				GestorControles.getMenuInferior().accioPremuda();
+				MenuInferior.seleccionarElemento(7);
+				MenuInferior.accioPremuda();
 				break;
 			case KeyEvent.VK_9 :
-				GestorControles.getMenuInferior().seleccionarElemento(8);
-				GestorControles.getMenuInferior().accioPremuda();
+				MenuInferior.seleccionarElemento(8);
+				MenuInferior.accioPremuda();
 				break;
 			case KeyEvent.VK_0 :
-				GestorControles.getMenuInferior().seleccionarElemento(9);
-				GestorControles.getMenuInferior().accioPremuda();
+				MenuInferior.seleccionarElemento(9);
+				MenuInferior.accioPremuda();
 				break;
 			case KeyEvent.VK_PAGE_UP :
 				VariablesGlobales.debug1 = !VariablesGlobales.debug1;
 				break;
 			case KeyEvent.VK_PAGE_DOWN :
 				VariablesGlobales.debug2 = !VariablesGlobales.debug2;
-				break;
-			case KeyEvent.VK_P :
-				VariablesGlobales.pause = !VariablesGlobales.pause;
-				VariablesGlobales.cambioEstado = true;
 				break;
 			case KeyEvent.VK_ESCAPE :
 				System.exit(0);
@@ -115,10 +141,11 @@ public final class Teclado implements KeyListener {
 				izquierda.teclaLiberada();
 				break;
 			case KeyEvent.VK_SHIFT :
-				corriendo = false;
+				shift = false;
 				break;
 		}
 	}
+
 
 	@Override
 	public void keyTyped(KeyEvent e) {

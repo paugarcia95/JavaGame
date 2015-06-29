@@ -2,7 +2,7 @@ package estadoJuego.mapas;
 
 import java.awt.Rectangle;
 
-import estadoJuego.sprites.Sprite;
+import principal.sprites.Sprite;
 
 public class Tile {
 	private final Sprite sprite;

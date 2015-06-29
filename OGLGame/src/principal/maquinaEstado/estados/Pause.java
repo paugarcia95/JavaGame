@@ -1,4 +1,4 @@
-package principal.maquinaEstado.juego;
+package principal.maquinaEstado.estados;
 
 import java.awt.Color;
 import java.awt.Graphics;
@@ -37,7 +37,7 @@ public class Pause implements EstadoJuego {
 	}
 
 	@Override
-	public void reanudar() {
+	public void iniciar() {
 		times = 0;
 	}
 

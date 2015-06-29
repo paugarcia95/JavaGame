@@ -2,8 +2,8 @@ package principal;
 
 import java.awt.Font;
 
-import estadoJuego.sprites.HojaSprites;
 import principal.herramientas.CargadorRecursos;
+import principal.sprites.HojaSprites;
 
 public final class Constantes {
 
@@ -25,6 +25,7 @@ public final class Constantes {
 	public static final int CENTRO_VENTANA_Y = ALTO_JUEGO / 2;
 
 	public static final String RUTA_MAPA = "/mapas/1.gmap";
+	public static final String RUTA_HOJA_TEXTURAS = "/imagenes/hojasTexturas/2.png";
 	public static final String RUTA_ICONO_RATON = "/imagenes/iconos/iconoCursor2.png";
 	public static final String RUTA_ICONO_VENTANA = "/imagenes/iconos/iconoVentana.png";
 	public static final String RUTA_PERSONAJE = "/imagenes/hojasPersonajes/jugador1.png";

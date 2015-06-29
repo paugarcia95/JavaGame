@@ -140,6 +140,72 @@ public class DrawerClass {
 		g.fillOval(p.x, p.y, ancho, alto);
 	}
 
+	public static void dibujarLineaHorizontal(final Graphics g, final int x, final int y, final int ancho) {
+		++objetosDibujados;
+		g.drawLine(x, y, x + ancho, y);
+	}
+
+	public static void dibujarLineaVertical(final Graphics g, final int x, final int y, final int alto) {
+		++objetosDibujados;
+		g.drawLine(x, y, x, y + alto);
+	}
+
+	public static void dibujarLineaHorizontal(final Graphics g, final int x, final int y, final int ancho, Color c) {
+		++objetosDibujados;
+		g.setColor(c);
+		g.drawLine(x, y, x + ancho, y);
+	}
+
+	public static void dibujarLineaVertical(final Graphics g, final int x, final int y, final int alto, Color c) {
+		++objetosDibujados;
+		g.setColor(c);
+		g.drawLine(x, y, x, y + alto);
+	}
+
+	public static void dibujarLineaHorizontal(final Graphics g, final int x, final int y, final int ancho,
+			final int size) {
+		for (int i = 0; i < size; ++i) {
+			++objetosDibujados;
+			g.drawLine(x, y, x + ancho, y + i);
+		}
+	}
+
+	public static void dibujarLineaVertical(final Graphics g, final int x, final int y, final int alto, final int size) {
+		for (int i = 0; i < size; ++i) {
+			++objetosDibujados;
+			g.drawLine(x, y, x + i, y + alto);
+		}
+	}
+
+	public static void dibujarLineaHorizontal(final Graphics g, final int x, final int y, final int ancho,
+			final int size, Color c) {
+		g.setColor(c);
+		for (int i = 0; i < size; ++i) {
+			++objetosDibujados;
+			g.drawLine(x, y, x + ancho, y + i);
+		}
+	}
+
+	public static void dibujarLineaVertical(final Graphics g, final int x, final int y, final int alto, final int size,
+			Color c) {
+		g.setColor(c);
+		for (int i = 0; i < size; ++i) {
+			++objetosDibujados;
+			g.drawLine(x, y, x + i, y + alto);
+		}
+	}
+
+	public static void dibujarLinea(final Graphics g, final int x1, final int y1, final int x2, final int y2) {
+		++objetosDibujados;
+		g.drawLine(x1, y1, x2, y2);
+	}
+
+	public static void dibujarLinea(final Graphics g, final int x1, final int y1, final int x2, final int y2, Color c) {
+		++objetosDibujados;
+		g.setColor(c);
+		g.drawLine(x1, y1, x2, y2);
+	}
+
 	public static int getContadorObjetos() {
 		return objetosDibujados;
 	}

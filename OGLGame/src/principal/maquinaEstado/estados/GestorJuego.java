@@ -1,4 +1,4 @@
-package principal.maquinaEstado.juego;
+package principal.maquinaEstado.estados;
 
 import java.awt.Color;
 import java.awt.Graphics;
@@ -6,22 +6,23 @@ import java.awt.Point;
 import java.awt.Rectangle;
 import java.util.ArrayList;
 
-import estadoJuego.entes.Jugador;
-import estadoJuego.interfazUsuario.MenuInferior;
-import estadoJuego.mapas.Mapa;
 import principal.Constantes;
 import principal.GestorPrincipal;
 import principal.VariablesGlobales;
+import principal.control.Raton;
 import principal.graficos.SuperficieDibujo;
 import principal.herramientas.DrawerClass;
 import principal.maquinaEstado.EstadoJuego;
+import estadoJuego.entes.Jugador;
+import estadoJuego.interfazUsuario.MenuInferior;
+import estadoJuego.mapas.Mapa;
 
 public class GestorJuego implements EstadoJuego {
 	
-	private Mapa mapa;
-	private Jugador jugador;
+	private volatile Mapa mapa;
+	private volatile Jugador jugador;
 
-	private MenuInferior menuInferior;
+	private volatile MenuInferior menuInferior;
 
 	public GestorJuego() {
 		iniciarMapa(Constantes.RUTA_MAPA);
@@ -67,11 +68,13 @@ public class GestorJuego implements EstadoJuego {
 
 	@Override
 	public void dibujar(final Graphics g) {
-		mapa.dibujar(g, (int) jugador.getPosicionX(), (int) jugador.getPosicionY());
-		jugador.dibujar(g);
-		menuInferior.dibujar(g);
+		if (mapa != null && jugador != null && menuInferior != null) {
+			mapa.dibujar(g, (int) jugador.getPosicionX(), (int) jugador.getPosicionY());
+			jugador.dibujar(g);
+			menuInferior.dibujar(g);
 
-		mostrarInformacio(g);
+			mostrarInformacio(g);
+		}
 	}
 
 	private void mostrarInformacio(final Graphics g) {
@@ -96,12 +99,13 @@ public class GestorJuego implements EstadoJuego {
 	@Override
 	public void limpiarPantalla(Graphics g) {
 		DrawerClass.dibujarRectanguloRelleno(g, 0, 0, Constantes.ANCHO_PANTALLA_COMPLETA,
-				(int) (Constantes.ALTO_PANTALLA_COMPLETA - MenuInferior.altoMenu * Constantes.FACTOR_ESCALADO_Y),
+				(int) (Constantes.ALTO_PANTALLA_COMPLETA - (MenuInferior.altoMenu + 1) * Constantes.FACTOR_ESCALADO_Y),
 				Color.black);
 	}
 
 	@Override
-	public void reanudar() {
+	public void iniciar() {
+		Raton.setImagenPrincipal();
 	}
 
 }

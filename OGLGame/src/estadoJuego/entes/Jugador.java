@@ -6,6 +6,11 @@ import java.awt.Rectangle;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 
+import principal.Constantes;
+import principal.VariablesGlobales;
+import principal.control.GestorControles;
+import principal.herramientas.DrawerClass;
+import principal.sprites.HojaSprites;
 import estadoJuego.elementosJuego.accions.Accio;
 import estadoJuego.elementosJuego.accions.Atac;
 import estadoJuego.elementosJuego.objetos.EspadaBasica;
@@ -13,11 +18,6 @@ import estadoJuego.elementosJuego.objetos.Fuerza;
 import estadoJuego.elementosJuego.objetos.Objeto;
 import estadoJuego.elementosJuego.objetos.VaritaBasica;
 import estadoJuego.mapas.Mapa;
-import estadoJuego.sprites.HojaSprites;
-import principal.Constantes;
-import principal.VariablesGlobales;
-import principal.control.GestorControles;
-import principal.herramientas.DrawerClass;
 
 public class Jugador extends Ente {
 	private double posicionX;
@@ -41,7 +41,7 @@ public class Jugador extends Ente {
 	private int estado;
 
 	private HojaSprites hs;
-	private BufferedImage imagenActual;
+	private volatile BufferedImage imagenActual;
 
 	private Mapa mapa;
 	
@@ -84,6 +84,7 @@ public class Jugador extends Ente {
 		elementosMenu[0] = new Fuerza();
 		elementosMenu[1] = new EspadaBasica();
 		elementosMenu[2] = new VaritaBasica();
+		elementosMenu[3] = new EspadaBasica();
 
 		VariablesGlobales.RectanguloColisionJugador = new Rectangle(LIMITE_ARRIBA.x, LIMITE_ARRIBA.y,
 				LIMITE_ARRIBA.width + 1, LIMITE_DERECHA.height + 1);
@@ -104,7 +105,7 @@ public class Jugador extends Ente {
 			++resistencia;
 		}
 
-		if (GestorControles.teclado.corriendo && resistencia > 0) {
+		if (GestorControles.teclado.shift && resistencia > 0) {
 			velocidad = 2;
 		} else {
 			velocidad = 1;
@@ -112,7 +113,7 @@ public class Jugador extends Ente {
 	}
 
 	private void restarResistencia() {
-		if (GestorControles.teclado.corriendo) {
+		if (GestorControles.teclado.shift) {
 			if (resistencia > 0) {
 				resistencia -= 2;
 			} else
@@ -432,7 +433,10 @@ public class Jugador extends Ente {
 	}
 
 	public Rectangle getAreaAtaqueReal() {
-		return elementosMenu[elementoSelecionado].getAreaAtaque(this);
+		if (elementosMenu[elementoSelecionado] != null)
+			return elementosMenu[elementoSelecionado].getAreaAtaque(this);
+		else
+			return new Rectangle();
 	}
 
 	public void setPosicionX(double posicionX) {

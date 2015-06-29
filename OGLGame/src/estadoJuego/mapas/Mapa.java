@@ -7,22 +7,20 @@ import java.awt.Rectangle;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 
-import estadoJuego.elementosJuego.accions.Accio;
-import estadoJuego.entes.Enemigo;
-import estadoJuego.entes.enemigos.Sombra;
-import estadoJuego.interfazUsuario.MenuInferior;
-import estadoJuego.sprites.HojaSprites;
-import estadoJuego.sprites.Sprite;
 import principal.Constantes;
 import principal.VariablesGlobales;
 import principal.control.GestorControles;
 import principal.herramientas.CargadorRecursos;
 import principal.herramientas.Colores;
 import principal.herramientas.DrawerClass;
+import principal.sprites.HojaSprites;
+import principal.sprites.Sprite;
+import estadoJuego.elementosJuego.accions.Accio;
+import estadoJuego.entes.Enemigo;
+import estadoJuego.entes.enemigos.Sombra;
+import estadoJuego.interfazUsuario.MenuInferior;
 
 public class Mapa {
-	private String[] partes;
-
 	private final int ancho;
 	private final int alto;
 
@@ -32,7 +30,7 @@ public class Mapa {
 	private final int[] sprites;
 
 	private final boolean[] colisiones;
-	public ArrayList<Rectangle> areasColision = new ArrayList<Rectangle>();
+	public volatile ArrayList<Rectangle> areasColision = new ArrayList<Rectangle>();
 
 	private final int MARGEN_X = Constantes.ANCHO_JUEGO / 2 - Constantes.ANCHO_PERSONAJE / 2;
 	private final int MARGEN_Y = Constantes.ALTO_JUEGO / 2 - Constantes.ALTO_PERSONAJE / 2;
@@ -45,20 +43,17 @@ public class Mapa {
 	// L'hauria de tenir el jugador aquest atribut!!!
 	private ArrayList<Accio> accionsPendents = new ArrayList<Accio>();
 
-	private ArrayList<Enemigo> enemigos;
+	private volatile ArrayList<Enemigo> enemigos;
 	private volatile Enemigo enemigoSelecionado;
 
-	private String error = "WELLCOME";
-	private int intensitatError = Constantes.MAX_INTENSITAT_COLOR_ERROR;
+	private volatile String error = "WELLCOME";
+	private volatile int intensitatError = Constantes.MAX_INTENSITAT_COLOR_ERROR;
 
 	public Mapa(final String ruta) {
 		GestorControles.setMapa(this);
 
 		final String contenido = CargadorRecursos.leerArchivoTexto(ruta);
-		partes = contenido.split("\\*"); // Separa els strings cada cop que
-											// troba una *
-											// S'utilitza la doble barra per
-											// indicar q es un char especial
+		final String[] partes = contenido.split("\\*");
 
 		ancho = Integer.parseInt(partes[0]);
 		alto = Integer.parseInt(partes[1]);
@@ -109,6 +104,7 @@ public class Mapa {
 		enemigos.add(new Sombra(this, 300, 390, 1000, 1000, 0, 1, 8));
 		enemigos.add(new Sombra(this, 200, 375, 1000, 1000, 0, 4, 7));
 		enemigos.add(new Sombra(this, 100, 370, 1000, 1000, 0, 5, 10));
+		enemigos.add(new Sombra(this, -60, -60, 1000, 1000, 0, 1, 10));
 	}
 	
 	private Sprite[] assignarSprites(final String[] partesPaleta, final String[] hojasSeparadas) {

@@ -5,12 +5,11 @@ import java.awt.Graphics;
 import java.awt.Rectangle;
 import java.awt.image.BufferedImage;
 
-import estadoJuego.elementosJuego.objetos.Objeto;
-import estadoJuego.entes.Jugador;
 import principal.Constantes;
-import principal.control.GestorControles;
 import principal.herramientas.Colores;
 import principal.herramientas.DrawerClass;
+import estadoJuego.elementosJuego.objetos.Objeto;
+import estadoJuego.entes.Jugador;
 
 public class MenuInferior {
 
@@ -22,11 +21,10 @@ public class MenuInferior {
 
 	private final Jugador jugador;
 
-	private boolean accioPremuda = false;
-	private int elementoSelecionado = 0;
+	private static boolean accioPremuda = false;
+	private volatile static int elementoSelecionado = 0;
 
 	public MenuInferior(final Jugador jugador) {
-		GestorControles.setMenuInferior(this);
 		this.jugador = jugador;
 	}
 
@@ -148,11 +146,11 @@ public class MenuInferior {
 		}
 	}
 
-	public void seleccionarElemento(int x) {
+	public static void seleccionarElemento(int x) {
 		elementoSelecionado = x;
 	}
 
-	public void accioPremuda() {
+	public static void accioPremuda() {
 		accioPremuda = true;
 	}
 }
